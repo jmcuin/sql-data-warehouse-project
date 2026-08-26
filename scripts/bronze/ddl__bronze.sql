@@ -1,16 +1,6 @@
 --bronze layer creation
 
-CREATE OR REPLACE PROCEDURE bronze.load_bronze()
-LANGUAGE plpgsql
-AS $$
-DECLARE 
-		start_time TIMESTAMP;
-		endt_time TIMESTAMP;
-		
-BEGIN
-	RAISE NOTICE 'Loading data...';
-
-		DROP TABLE IF EXISTS bronze.crm_cust_info;
+DROP TABLE IF EXISTS bronze.crm_cust_info;
 		CREATE TABLE bronze.crm_cust_info(
 			cst_id INT,
 			cst_key	VARCHAR(50),
@@ -66,33 +56,4 @@ BEGIN
 			maintenance VARCHAR(50)
 		);
 
-		start_time := NOW();
-		TRUNCATE TABLE bronze.crm_cust_info;
-		\copy bronze.crm_cust_info FROM 'C:/Users/52443/Desktop/data warehouse project/databases/cust_info.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
 		
-		TRUNCATE TABLE bronze.crm_prd_info;
-		\copy bronze.crm_prd_info FROM 'C:/Users/52443/Desktop/data warehouse project/databases/prd_info.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
-		
-		TRUNCATE TABLE bronze.crm_sales_details;
-		\copy bronze.crm_sales_details FROM 'C:/Users/52443/Desktop/data warehouse project/databases/sales_details.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
-		
-		TRUNCATE TABLE bronze.erp_cust_az12;
-		\copy bronze.erp_cust_az12 FROM 'C:/Users/52443/Desktop/data warehouse project/databases/cust_az12.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
-		
-		TRUNCATE TABLE bronze.erp_loc_a101;
-		\copy bronze.erp_loc_a101 FROM 'C:/Users/52443/Desktop/data warehouse project/databases/loc_a101.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
-		
-		TRUNCATE TABLE bronze.erp_px_cat_g1v2;
-		\copy bronze.erp_px_cat_g1v2 FROM 'C:/Users/52443/Desktop/data warehouse project/databases/px_cat_g1v2.csv' WITH (FORMAT CSV, HEADER TRUE, DELIMITER ',',  ENCODING 'UTF8');
-		
-		end_time := NOW();
-	
-		RAISE NOTICE 'Data loaded successfully...';
-
-		RAISE NOTICE DATEDIFF(SECOND, start_time, end_time);
-	
-	EXCEPTION
-    WHEN OTHERS THEN
-        RAISE NOTICE 'Ocurrió un error: %', SQLERRM;
-END;
-$$;
